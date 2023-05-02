@@ -7,7 +7,7 @@ const name = ref("");
 
 // Create a ref for each input value
 const input_content = ref("");
-const input_category = ref(null);
+const input_category = ref("personal");
 
 // Create a computed property to sort todos by date
 const todos_asc = computed(() =>
@@ -31,10 +31,12 @@ watch(
     deep: true,
   }
 );
-
 // Create a function to add a todo
 const addTodo = () => {
+  console.log(input_category, "input_category");
+
   if (input_content.value.trim() === "" || input_category.value === null) {
+    alert("Please enter your todo and select a category");
     return;
   }
 
