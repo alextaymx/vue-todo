@@ -1,22 +1,27 @@
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
 
+// Create a ref for each piece of reactive state
 const todos = ref([]);
 const name = ref("");
 
+// Create a ref for each input value
 const input_content = ref("");
 const input_category = ref(null);
 
+// Create a computed property to sort todos by date
 const todos_asc = computed(() =>
   todos.value.sort((a, b) => {
     return a.createdAt - b.createdAt;
   })
 );
 
+// Watch for changes to name and save to localStorage
 watch(name, (newVal) => {
   localStorage.setItem("name", newVal);
 });
 
+// Watch for changes to todos and save to localStorage
 watch(
   todos,
   (newVal) => {
@@ -27,6 +32,7 @@ watch(
   }
 );
 
+// Create a function to add a todo
 const addTodo = () => {
   if (input_content.value.trim() === "" || input_category.value === null) {
     return;
@@ -41,10 +47,12 @@ const addTodo = () => {
   });
 };
 
+// Create a function to remove a todo
 const removeTodo = (todo) => {
   todos.value = todos.value.filter((t) => t !== todo);
 };
 
+// Load todos and name from localStorage on mount
 onMounted(() => {
   name.value = localStorage.getItem("name") || "";
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
@@ -68,7 +76,7 @@ onMounted(() => {
           type="text"
           name="content"
           id="content"
-          placeholder="e.g. make a video"
+          placeholder="e.g. go to gym"
           v-model="input_content"
         />
 
@@ -90,15 +98,15 @@ onMounted(() => {
               type="radio"
               name="category"
               id="category1"
-              value="business"
+              value="work"
               v-model="input_category"
             />
-            <span class="bubble business"></span>
-            <div>Business</div>
+            <span class="bubble work"></span>
+            <div>Work</div>
           </label>
         </div>
 
-        <input type="submit" value="Add todo" />
+        <input type="submit" value="Add To Do" />
       </form>
     </section>
 
@@ -108,7 +116,7 @@ onMounted(() => {
         <div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`">
           <label>
             <input type="checkbox" v-model="todo.done" />
-            <span :class="`bubble ${todo.category == 'business' ? 'business' : 'personal'}`"></span>
+            <span :class="`bubble ${todo.category == 'work' ? 'work' : 'personal'}`"></span>
           </label>
 
           <div class="todo-content">
@@ -116,7 +124,7 @@ onMounted(() => {
           </div>
 
           <div class="actions">
-            <button class="delete" @click="removeTodo(todo)">Delete</button>
+            <button class="delete" @click="removeTodo(todo)">❌</button>
           </div>
         </div>
       </div>
